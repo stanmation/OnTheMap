@@ -7,13 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1D7DB1C81D70F4CC00D0FACB /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7DB1C71D70F4CC00D0FACB /* MapViewController.swift */; };
+		1D7DB1CA1D70FBB300D0FACB /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7DB1C91D70FBB300D0FACB /* ListViewController.swift */; };
+		1D7DB1CC1D71067500D0FACB /* OTMClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7DB1CB1D71067500D0FACB /* OTMClient.swift */; };
 		1D7E7D541D70252900F5040F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7E7D531D70252900F5040F /* AppDelegate.swift */; };
-		1D7E7D561D70252900F5040F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7E7D551D70252900F5040F /* ViewController.swift */; };
+		1D7E7D561D70252900F5040F /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7E7D551D70252900F5040F /* LoginViewController.swift */; };
 		1D7E7D591D70252900F5040F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1D7E7D571D70252900F5040F /* Main.storyboard */; };
 		1D7E7D5B1D70252900F5040F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D7E7D5A1D70252900F5040F /* Assets.xcassets */; };
 		1D7E7D5E1D70252900F5040F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1D7E7D5C1D70252900F5040F /* LaunchScreen.storyboard */; };
 		1D7E7D691D70252A00F5040F /* OnTheMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7E7D681D70252A00F5040F /* OnTheMapTests.swift */; };
 		1D7E7D741D70252A00F5040F /* OnTheMapUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7E7D731D70252A00F5040F /* OnTheMapUITests.swift */; };
+		1DA318931D798745009DAC29 /* Student.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DA318921D798745009DAC29 /* Student.swift */; };
+		1DBACE791D702C5F0051162B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBACE781D702C5F0051162B /* Constants.swift */; };
+		1DBACE7B1D7079E80051162B /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBACE7A1D7079E80051162B /* GCDBlackBox.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,9 +40,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1D7DB1C71D70F4CC00D0FACB /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		1D7DB1C91D70FBB300D0FACB /* ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
+		1D7DB1CB1D71067500D0FACB /* OTMClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMClient.swift; sourceTree = "<group>"; };
 		1D7E7D501D70252900F5040F /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1D7E7D531D70252900F5040F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		1D7E7D551D70252900F5040F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		1D7E7D551D70252900F5040F /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		1D7E7D581D70252900F5040F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1D7E7D5A1D70252900F5040F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1D7E7D5D1D70252900F5040F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -47,6 +56,9 @@
 		1D7E7D6F1D70252A00F5040F /* OnTheMapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnTheMapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1D7E7D731D70252A00F5040F /* OnTheMapUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnTheMapUITests.swift; sourceTree = "<group>"; };
 		1D7E7D751D70252A00F5040F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1DA318921D798745009DAC29 /* Student.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Student.swift; sourceTree = "<group>"; };
+		1DBACE781D702C5F0051162B /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		1DBACE7A1D7079E80051162B /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +86,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1D7DB1CD1D71085C00D0FACB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1DBACE781D702C5F0051162B /* Constants.swift */,
+				1DBACE7A1D7079E80051162B /* GCDBlackBox.swift */,
+				1D7DB1CB1D71067500D0FACB /* OTMClient.swift */,
+				1DA318921D798745009DAC29 /* Student.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
 		1D7E7D471D70252900F5040F = {
 			isa = PBXGroup;
 			children = (
@@ -97,8 +120,9 @@
 		1D7E7D521D70252900F5040F /* OnTheMap */ = {
 			isa = PBXGroup;
 			children = (
+				1D7DB1CD1D71085C00D0FACB /* Models */,
+				1DBACE771D702C4D0051162B /* View Controllers */,
 				1D7E7D531D70252900F5040F /* AppDelegate.swift */,
-				1D7E7D551D70252900F5040F /* ViewController.swift */,
 				1D7E7D571D70252900F5040F /* Main.storyboard */,
 				1D7E7D5A1D70252900F5040F /* Assets.xcassets */,
 				1D7E7D5C1D70252900F5040F /* LaunchScreen.storyboard */,
@@ -123,6 +147,16 @@
 				1D7E7D751D70252A00F5040F /* Info.plist */,
 			);
 			path = OnTheMapUITests;
+			sourceTree = "<group>";
+		};
+		1DBACE771D702C4D0051162B /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1D7E7D551D70252900F5040F /* LoginViewController.swift */,
+				1D7DB1C71D70F4CC00D0FACB /* MapViewController.swift */,
+				1D7DB1C91D70FBB300D0FACB /* ListViewController.swift */,
+			);
+			name = "View Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -256,8 +290,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1D7E7D561D70252900F5040F /* ViewController.swift in Sources */,
+				1DBACE7B1D7079E80051162B /* GCDBlackBox.swift in Sources */,
+				1D7E7D561D70252900F5040F /* LoginViewController.swift in Sources */,
+				1D7DB1CA1D70FBB300D0FACB /* ListViewController.swift in Sources */,
 				1D7E7D541D70252900F5040F /* AppDelegate.swift in Sources */,
+				1D7DB1CC1D71067500D0FACB /* OTMClient.swift in Sources */,
+				1D7DB1C81D70F4CC00D0FACB /* MapViewController.swift in Sources */,
+				1DBACE791D702C5F0051162B /* Constants.swift in Sources */,
+				1DA318931D798745009DAC29 /* Student.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -402,6 +442,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = OnTheMap/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stanmation.OnTheMap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -413,6 +454,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = OnTheMap/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stanmation.OnTheMap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -484,6 +526,7 @@
 				1D7E7D7A1D70252A00F5040F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1D7E7D7B1D70252A00F5040F /* Build configuration list for PBXNativeTarget "OnTheMapTests" */ = {
 			isa = XCConfigurationList;
@@ -492,6 +535,7 @@
 				1D7E7D7D1D70252A00F5040F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1D7E7D7E1D70252A00F5040F /* Build configuration list for PBXNativeTarget "OnTheMapUITests" */ = {
 			isa = XCConfigurationList;
@@ -500,6 +544,7 @@
 				1D7E7D801D70252A00F5040F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
