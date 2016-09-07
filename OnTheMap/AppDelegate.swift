@@ -22,7 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-
 }
 
 // MARK: Create URL from Parameters

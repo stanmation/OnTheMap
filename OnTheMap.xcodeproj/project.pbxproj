@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1D7C33021D7C16F50000750B /* InformationPostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7C33011D7C16F50000750B /* InformationPostingViewController.swift */; };
+		1D7CF94E1D7A6198004D61EB /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7CF94D1D7A6198004D61EB /* NavigationBar.swift */; };
 		1D7DB1C81D70F4CC00D0FACB /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7DB1C71D70F4CC00D0FACB /* MapViewController.swift */; };
 		1D7DB1CA1D70FBB300D0FACB /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7DB1C91D70FBB300D0FACB /* ListViewController.swift */; };
 		1D7DB1CC1D71067500D0FACB /* OTMClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7DB1CB1D71067500D0FACB /* OTMClient.swift */; };
@@ -20,6 +22,7 @@
 		1DA318931D798745009DAC29 /* Student.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DA318921D798745009DAC29 /* Student.swift */; };
 		1DBACE791D702C5F0051162B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBACE781D702C5F0051162B /* Constants.swift */; };
 		1DBACE7B1D7079E80051162B /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBACE7A1D7079E80051162B /* GCDBlackBox.swift */; };
+		1DD9B7B81D7D5AE5000BA67A /* URLPostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD9B7B71D7D5AE5000BA67A /* URLPostingViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +43,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1D7C33011D7C16F50000750B /* InformationPostingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformationPostingViewController.swift; sourceTree = "<group>"; };
+		1D7CF94D1D7A6198004D61EB /* NavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 		1D7DB1C71D70F4CC00D0FACB /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		1D7DB1C91D70FBB300D0FACB /* ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		1D7DB1CB1D71067500D0FACB /* OTMClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMClient.swift; sourceTree = "<group>"; };
@@ -59,6 +64,7 @@
 		1DA318921D798745009DAC29 /* Student.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Student.swift; sourceTree = "<group>"; };
 		1DBACE781D702C5F0051162B /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		1DBACE7A1D7079E80051162B /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
+		1DD9B7B71D7D5AE5000BA67A /* URLPostingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLPostingViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +95,7 @@
 		1D7DB1CD1D71085C00D0FACB /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				1D7CF94D1D7A6198004D61EB /* NavigationBar.swift */,
 				1DBACE781D702C5F0051162B /* Constants.swift */,
 				1DBACE7A1D7079E80051162B /* GCDBlackBox.swift */,
 				1D7DB1CB1D71067500D0FACB /* OTMClient.swift */,
@@ -155,6 +162,8 @@
 				1D7E7D551D70252900F5040F /* LoginViewController.swift */,
 				1D7DB1C71D70F4CC00D0FACB /* MapViewController.swift */,
 				1D7DB1C91D70FBB300D0FACB /* ListViewController.swift */,
+				1D7C33011D7C16F50000750B /* InformationPostingViewController.swift */,
+				1DD9B7B71D7D5AE5000BA67A /* URLPostingViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -296,8 +305,11 @@
 				1D7E7D541D70252900F5040F /* AppDelegate.swift in Sources */,
 				1D7DB1CC1D71067500D0FACB /* OTMClient.swift in Sources */,
 				1D7DB1C81D70F4CC00D0FACB /* MapViewController.swift in Sources */,
+				1D7C33021D7C16F50000750B /* InformationPostingViewController.swift in Sources */,
 				1DBACE791D702C5F0051162B /* Constants.swift in Sources */,
+				1DD9B7B81D7D5AE5000BA67A /* URLPostingViewController.swift in Sources */,
 				1DA318931D798745009DAC29 /* Student.swift in Sources */,
+				1D7CF94E1D7A6198004D61EB /* NavigationBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

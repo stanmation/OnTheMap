@@ -9,9 +9,15 @@
 import UIKit
 import MapKit
 
-class MapViewController: UIViewController {
+
+class MapViewController: UIViewController, UIAlertViewDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var objectIDText: UITextField!
+    
+    var students: [Student]?
+
+    var studentExist = false
     
     // We will create an MKPointAnnotation for each dictionary in "locations". The
     // point annotations will be stored in this array, and then provided to the map view.
@@ -23,58 +29,25 @@ class MapViewController: UIViewController {
         // configure map functionalities
         mapView.pitchEnabled = false
         
-        // set UI Navigation Item
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.logout))
-        let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: nil)
-        let pinButton = UIBarButtonItem(image: UIImage(named: "PinIcon"), style: .Plain, target: self, action: nil)
-        self.navigationItem.rightBarButtonItems = [refreshButton, pinButton]
+        // set navigationBar
+        NavigationBar().setupButtons(self, nav: self.navigationItem)
         
-        OTMClient.sharedInstance().GETtingStudentLocations() { (results, errorString) in
-            if results != nil {
+        
+        // refresh when first load the screen
+        refresh()
+    }
 
-                for dictionary in results! {
-                    
-                    var latValue = dictionary[Constants.OTMResponseKeys.Latitude] as? Double
-                    if latValue == nil  {latValue = 0}
-                    let lat = CLLocationDegrees(latValue!)
-                    
-                    var longValue = dictionary[Constants.OTMResponseKeys.Longitude] as? Double
-                    if longValue == nil  {longValue = 0}
-                    let long = CLLocationDegrees(longValue!)
-                    
-                    // The lat and long are used to create a CLLocationCoordinates2D instance.
-                    let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-                    
-                    var first = dictionary[Constants.OTMResponseKeys.FirstName] as? String
-                    if first == nil {first = ""}
-                    
-                    var last = dictionary[Constants.OTMResponseKeys.LastName] as? String
-                    if last == nil {last = ""}
-                    
-                    var mediaURL = dictionary[Constants.OTMResponseKeys.MediaURL] as? String
-                    if mediaURL == nil {mediaURL = ""}
-
-                    
-                    performUIUpdatesOnMain {
-                    
-                        // Here we create the annotation and set its coordiate, title, and subtitle properties
-                        let annotation = MKPointAnnotation()
-                        annotation.coordinate = coordinate
-                        annotation.title = "\(first) \(last)"
-                        annotation.subtitle = mediaURL
-                        
-                        // Finally we place the annotation in an array of annotations.
-                        self.annotations.append(annotation)
-                        
-                        // When the array is complete, we add the annotations to the map.
-                        self.mapView.addAnnotations(self.annotations)
-                    }
-                }
-                
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        OTMClient.sharedInstance().GETtingAStudentLocation { (studentExist, errorString) in
+            if studentExist == true {
+                self.studentExist = true
+            } else {
+                self.studentExist = false
             }
-
         }
-
     }
     
     
@@ -111,8 +84,92 @@ class MapViewController: UIViewController {
         }
     }
 
-    
     func logout () {
-        print ("logout")
+        OTMClient.sharedInstance().DELETEingSession() { (results, errorString) in
+            if results == true {
+                performUIUpdatesOnMain {
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                }
+            }
+        }
+    }
+    
+    func refresh() {
+        OTMClient.sharedInstance().GETtingStudentLocations() { (results, errorString) in
+            if results != nil {
+                
+                self.students = OTMClient.sharedInstance().students
+
+                // empty array of anontations
+                self.annotations.removeAll()
+                
+                for student in self.students! {
+                    
+                    // The lat and long are used to create a CLLocationCoordinates2D instance.
+                    let coordinate = CLLocationCoordinate2D(latitude: student.lat, longitude: student.long)
+    
+                    
+                    // Here we create the annotation and set its coordiate, title, and subtitle properties
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = coordinate
+                    annotation.title = "\(student.firstName) \(student.lastName)"
+                    annotation.subtitle = student.mediaUrl
+                    
+                    // Finally we place the annotation in an array of annotations.
+                    self.annotations.append(annotation)
+                }
+                
+                performUIUpdatesOnMain {
+                    
+                    // remove mapAnnotation
+                    self.mapView.removeAnnotations(self.mapView.annotations)
+                    // When the array is complete, we add the annotations to the map.
+                    self.mapView.addAnnotations(self.annotations)
+                }
+                
+            }
+            
+        }
+
+    }
+    
+    func pinTapped(){
+        
+        if studentExist == true {
+            self.displayAlert("You have already posted a student location. Would you like to overwrite your current location?")
+        } else {
+            self.navigateToInformationPostingVC(false)
+        }
+    }
+    
+    func navigateToInformationPostingVC(studentExist: Bool) {
+        let informationPostingViewController = self.storyboard!.instantiateViewControllerWithIdentifier("InformationPostingViewController") as! InformationPostingViewController
+        informationPostingViewController.studentExist = studentExist
+        self.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
+        informationPostingViewController.modalPresentationStyle = .OverCurrentContext
+        presentViewController(informationPostingViewController, animated: true, completion: nil)
+    }
+    
+    
+    // MARK: Debug area
+    
+    @IBAction func deleteAUser(sender: AnyObject) {
+        
+        OTMClient.sharedInstance().DELETEingAUser(objectIDText.text!) { (result, errorString) in
+            print("user deleted")
+        }
+    }
+    
+    // MARK: other delegate methods
+    
+    func displayAlert(messageText: String){
+        let alert = UIAlertController(title: "", message: messageText, preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "Overwrite?", style: .Default, handler: { (handler) in
+            self.navigateToInformationPostingVC(true)
+        }))
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+
+        self.presentViewController(alert, animated: true, completion: nil)
     }
 }

@@ -14,12 +14,29 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     var students: [Student]?
     
+    @IBOutlet weak var tableView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // set navigationBar
+        NavigationBar().setupButtons(self, nav: self.navigationItem)
     }
     
     override func viewWillAppear(animated: Bool) {
         students = OTMClient.sharedInstance().students
+    }
+    
+    func verifyUrl (urlString: String?) -> Bool {
+        //Check for nil
+        if let urlString = urlString {
+            // create NSURL instance
+            if let url = NSURL(string: urlString) {
+                // check if your application can open the NSURL instance
+                return UIApplication.sharedApplication().canOpenURL(url)
+            }
+        }
+        return false
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -47,11 +64,30 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let student = students![indexPath.row]
-        UIApplication.sharedApplication().openURL(NSURL(string: student.mediaUrl)!)
+        if verifyUrl(student.mediaUrl){
+            UIApplication.sharedApplication().openURL(NSURL(string: student.mediaUrl)!)
+        }
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 40
+    }
+    
+    func refresh() {
+        print("refresh")
+        OTMClient.sharedInstance().GETtingStudentLocations() { (results, errorString) in
+            if results != nil {
+                
+                performUIUpdatesOnMain {
+                    self.students = OTMClient.sharedInstance().students
+                    self.tableView.reloadData()
+                }
+            }
+        }
+    }
+    
+    func pinTapped(){
+        self.presentViewController(InformationPostingViewController(), animated: true, completion: nil)
     }
 
 }
