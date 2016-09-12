@@ -14,7 +14,6 @@ class InformationPostingViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var inputTextField: UITextField!
     var studentExist = false
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         

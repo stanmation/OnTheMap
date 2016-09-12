@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import FBSDKLoginKit
 
-class LoginViewController: UIViewController, UIAlertViewDelegate {
+class LoginViewController: UIViewController, UIAlertViewDelegate, FBSDKLoginButtonDelegate {
     
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
@@ -18,58 +19,50 @@ class LoginViewController: UIViewController, UIAlertViewDelegate {
         super.viewDidLoad()
         
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        //setup facebook button
+        let loginButton = FBSDKLoginButton()
+        loginButton.center = CGPoint(x: self.view.center.x, y: self.view.frame.height - 100)
+        loginButton.delegate = self
+        self.view.addSubview(loginButton)
+        
+        if (FBSDKAccessToken.currentAccessToken() != nil) {
+            fetchFBProfile()
+        }
+    }
+    
+    func fetchFBProfile() {
+        let token = FBSDKAccessToken.currentAccessToken().tokenString
+        OTMClient.sharedInstance().POSTingASessionWithFacebook(token) { (success, errorString) in
+            
+            if (success) {
+                performUIUpdatesOnMain {
+                    self.completeLogin()
+                } 
+            } else {
+                performUIUpdatesOnMain {
+                    self.displayAlert("Error", messageText: "Your facebook ID is not connected to your Udacity account")
+                }
+            }
+        }
     }
     
     @IBAction func loginPressed(sender: UIButton) {
-        
         if emailTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
             print("Username or Password Empty")
         } else {
-            
-            let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
-            request.HTTPMethod = "POST"
-            request.addValue("application/json", forHTTPHeaderField: "Accept")
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.HTTPBody = "{\"udacity\": {\"username\": \"\(emailTextField.text!)\", \"password\": \"\(passwordTextField.text!)\"}}".dataUsingEncoding(NSUTF8StringEncoding)
-            let session = NSURLSession.sharedSession()
-            let task = session.dataTaskWithRequest(request) { data, response, error in
-                if error != nil {
+            OTMClient.sharedInstance().authenticateWithViewController(self) {success, error in
+                if success == true {
+                    performUIUpdatesOnMain {
+                        self.completeLogin()
+                    }
+                } else {
                     performUIUpdatesOnMain {
                         self.displayAlert("Error", messageText: "email or password is not correct")
                     }
-                    return
                 }
-                
-                /* GUARD: Did we get a successful 2XX response? */
-                guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                    print("Your request returned a status code other than 2xx!")
-                    performUIUpdatesOnMain {
-                        self.displayAlert("Error", messageText: "email or password is not correct")
-                    }
-                    return
-                }
-                
-                let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
-                print(NSString(data: newData, encoding: NSUTF8StringEncoding))
-                
-                //Parse the data
-                let parsedResult: AnyObject!
-                do {
-                    parsedResult = try NSJSONSerialization.JSONObjectWithData(newData, options: .AllowFragments)
-                } catch {
-                    print("Could not parse the data as JSON: '\(data)'")
-                    return
-                }
-                
-                if let session = parsedResult[Constants.OTMResponseKeys.Session] as? [String: AnyObject], sessionID = session[Constants.OTMResponseKeys.SessionID] as? String {
-                    self.appDelegate.sessionID = sessionID
-                }
-                
-                self.completeLogin()
             }
-            task.resume()
         }
-
     }
     
     @IBAction func signUpPressed(sender: AnyObject) {
@@ -78,12 +71,11 @@ class LoginViewController: UIViewController, UIAlertViewDelegate {
     }
     
     func completeLogin () {
-        
+
         performUIUpdatesOnMain {
             let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MainTabBarController") as! UITabBarController
             self.presentViewController(controller, animated: true, completion: nil)
         }
-        
     }
     
     func displayAlert(messageTitle: String, messageText: String){
@@ -92,6 +84,23 @@ class LoginViewController: UIViewController, UIAlertViewDelegate {
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
+    
+    //MARK: Delegate methods
+    
+    func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
+        if error != nil {
+            print("error")
+            return
+        }
+        
+        if (result.declinedPermissions != nil) || (!result.isCancelled) {
+            self.fetchFBProfile()
+        }
+    }
+    
+    func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
+
+    }
 
     
 

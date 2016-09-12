@@ -8,6 +8,8 @@
 
 import UIKit
 import MapKit
+import FBSDKLoginKit
+
 
 
 class MapViewController: UIViewController, UIAlertViewDelegate {
@@ -32,14 +34,15 @@ class MapViewController: UIViewController, UIAlertViewDelegate {
         // set navigationBar
         NavigationBar().setupButtons(self, nav: self.navigationItem)
         
-        
-        // refresh when first load the screen
-        refresh()
+
     }
+    
 
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        refresh()
         
         OTMClient.sharedInstance().GETtingAStudentLocation { (studentExist, errorString) in
             if studentExist == true {
@@ -88,7 +91,10 @@ class MapViewController: UIViewController, UIAlertViewDelegate {
         OTMClient.sharedInstance().DELETEingSession() { (results, errorString) in
             if results == true {
                 performUIUpdatesOnMain {
-                    self.dismissViewControllerAnimated(true, completion: nil)
+                    self.dismissViewControllerAnimated(true, completion: {
+                        let loginManager = FBSDKLoginManager()
+                        loginManager.logOut() // this is an instance function
+                    })
                 }
             }
         }
@@ -96,8 +102,11 @@ class MapViewController: UIViewController, UIAlertViewDelegate {
     
     func refresh() {
         OTMClient.sharedInstance().GETtingStudentLocations() { (results, errorString) in
-            if results != nil {
-                
+            if errorString != nil {
+                performUIUpdatesOnMain{
+                    self.displayAlert(errorString!, alertType: "NoConnection")
+                }
+            } else {
                 self.students = OTMClient.sharedInstance().students
 
                 // empty array of anontations
@@ -134,9 +143,10 @@ class MapViewController: UIViewController, UIAlertViewDelegate {
     }
     
     func pinTapped(){
-        
         if studentExist == true {
-            self.displayAlert("You have already posted a student location. Would you like to overwrite your current location?")
+            performUIUpdatesOnMain{
+                self.displayAlert("You have already posted a student location. Would you like to overwrite your current location?", alertType: "Overwrite")
+            }
         } else {
             self.navigateToInformationPostingVC(false)
         }
@@ -162,13 +172,17 @@ class MapViewController: UIViewController, UIAlertViewDelegate {
     
     // MARK: other delegate methods
     
-    func displayAlert(messageText: String){
+    func displayAlert(messageText: String, alertType: String){
         let alert = UIAlertController(title: "", message: messageText, preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "Overwrite?", style: .Default, handler: { (handler) in
-            self.navigateToInformationPostingVC(true)
-        }))
-
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        
+        if alertType == "Overwrite" {
+            alert.addAction(UIAlertAction(title: "Overwrite?", style: .Default, handler: { (handler) in
+                self.navigateToInformationPostingVC(true)
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        } else if alertType == "NoConnection" {
+            alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        }
 
         self.presentViewController(alert, animated: true, completion: nil)
     }

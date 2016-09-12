@@ -11,8 +11,9 @@ import UIKit
 class ListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var appDelegate: AppDelegate!
-    
     var students: [Student]?
+    var studentExist = false
+
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -22,9 +23,19 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         // set navigationBar
         NavigationBar().setupButtons(self, nav: self.navigationItem)
     }
-    
+
     override func viewWillAppear(animated: Bool) {
-        students = OTMClient.sharedInstance().students
+        super.viewWillAppear(animated)
+        
+        refresh()
+
+        OTMClient.sharedInstance().GETtingAStudentLocation { (studentExist, errorString) in
+            if studentExist == true {
+                self.studentExist = true
+            } else {
+                self.studentExist = false
+            }
+        }
     }
     
     func verifyUrl (urlString: String?) -> Bool {
@@ -45,21 +56,28 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cellReuseIdentifier = "ListTableViewCell"
         let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier) as UITableViewCell!
         
-        // setup "locations" array
-        let student = students![indexPath.row]
-        let first = student.firstName
-        let last = student.lastName
-        
-        /* Set cell defaults */
-        cell.textLabel!.text = "\(first) \(last)"
-        cell.imageView!.image = UIImage(named: "PinIcon")
-        cell.imageView!.contentMode = UIViewContentMode.ScaleAspectFit
+        if students?.count != nil {
+            // setup "locations" array
+            let student = students![indexPath.row]
+            let first = student.firstName
+            let last = student.lastName
+            
+            /* Set cell defaults */
+            cell.textLabel!.text = "\(first) \(last)"
+            cell.imageView!.image = UIImage(named: "PinIcon")
+            cell.imageView!.contentMode = UIViewContentMode.ScaleAspectFit
+        }
         
         return cell
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return students!.count
+        
+        if students?.count != nil {
+            return students!.count
+        } else {
+            return 1
+        }
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -74,9 +92,13 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func refresh() {
-        print("refresh")
         OTMClient.sharedInstance().GETtingStudentLocations() { (results, errorString) in
-            if results != nil {
+            if errorString != nil {
+                performUIUpdatesOnMain{
+                    self.displayAlert(errorString!, alertType: "NoConnection")
+                }
+            } else  {
+                self.students = OTMClient.sharedInstance().students
                 
                 performUIUpdatesOnMain {
                     self.students = OTMClient.sharedInstance().students
@@ -87,7 +109,38 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func pinTapped(){
-        self.presentViewController(InformationPostingViewController(), animated: true, completion: nil)
+        if studentExist == true {
+            performUIUpdatesOnMain{
+                self.displayAlert("You have already posted a student location. Would you like to overwrite your current location?", alertType: "Overwrite")
+            }
+        } else {
+            self.navigateToInformationPostingVC(false)
+        }
+    }
+    
+    func navigateToInformationPostingVC(studentExist: Bool) {
+        let informationPostingViewController = self.storyboard!.instantiateViewControllerWithIdentifier("InformationPostingViewController") as! InformationPostingViewController
+        informationPostingViewController.studentExist = studentExist
+        self.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
+        informationPostingViewController.modalPresentationStyle = .OverCurrentContext
+        presentViewController(informationPostingViewController, animated: true, completion: nil)
+    }
+    
+    // MARK: other delegate methods
+    
+    func displayAlert(messageText: String, alertType: String){
+        let alert = UIAlertController(title: "", message: messageText, preferredStyle: .Alert)
+        
+        if alertType == "Overwrite" {
+            alert.addAction(UIAlertAction(title: "Overwrite?", style: .Default, handler: { (handler) in
+                self.navigateToInformationPostingVC(true)
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        } else if alertType == "NoConnection" {
+            alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        }
+        
+        self.presentViewController(alert, animated: true, completion: nil)
     }
 
 }

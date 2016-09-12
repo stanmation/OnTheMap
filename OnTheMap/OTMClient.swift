@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FBSDKLoginKit
 
 class OTMClient : NSObject {
     
@@ -19,7 +20,6 @@ class OTMClient : NSObject {
     var session = NSURLSession.sharedSession()
     
     // authentication state
-    var requestToken: String? = nil
     var sessionID : String? = nil
     var userID : Int? = nil
     var objectID: String?
@@ -31,19 +31,101 @@ class OTMClient : NSObject {
         super.init()
         
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+    }
+    
+    func authenticateWithViewController(hostViewController: LoginViewController, completionHandlerForAuth: (success: Bool, errorString: String?) -> Void) {
+        self.POSTingASession(hostViewController.emailTextField.text!, password: hostViewController.passwordTextField.text!) {success, errorString in
+            if success {
+                self.GETtingPublicUserData() {(success, errorString) in
+                    completionHandlerForAuth(success: success, errorString: errorString)
+                }
 
+            }
+            completionHandlerForAuth(success: success, errorString: errorString)
+        }
+
+    }
+
+    
+    func POSTingASession(username: String, password: String, completionHandlerForPOSTingASession: (success: Bool, errorString: String?) -> Void) {
+        
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
+        request.HTTPMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.HTTPBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}".dataUsingEncoding(NSUTF8StringEncoding)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            if error != nil {
+                completionHandlerForPOSTingASession(success: false, errorString: "email or password is not correct")
+                return
+            }
+            
+            /* GUARD: Did we get a successful 2XX response? */
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+                print("Your request returned a status code other than 2xx!")
+                completionHandlerForPOSTingASession(success: false, errorString: "email or password is not correct")
+                return
+            }
+            
+            let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
+            print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+            
+            //Parse the data
+            let parsedResult: AnyObject!
+            do {
+                parsedResult = try NSJSONSerialization.JSONObjectWithData(newData, options: .AllowFragments)
+            } catch {
+                print("Could not parse the data as JSON: '\(data)'")
+                return
+            }
+            
+            if let session = parsedResult[Constants.OTMResponseKeys.Session] as? [String: AnyObject], sessionID = session[Constants.OTMResponseKeys.SessionID] as? String {
+                self.sessionID = sessionID
+            }
+            
+            if let account = parsedResult[Constants.OTMResponseKeys.Account] as? [String: AnyObject], accountKey = account[Constants.OTMResponseKeys.AccountKey] as? Int {
+                self.userID = accountKey
+            }
+            completionHandlerForPOSTingASession(success: true, errorString: nil)
+        }
+        task.resume()
+
+    }
+    
+    func GETtingPublicUserData(completionHandlerForGettingPublicUserData: (success: Bool, errorString: String?) -> Void) {
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/\(userID)")!)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            if error != nil { // Handle error...
+                completionHandlerForGettingPublicUserData(success: false, errorString: "failed in getting Public User data")
+                print(error)
+                return
+            }
+            let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
+            print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+            completionHandlerForGettingPublicUserData(success: true, errorString: nil)
+        }
+        task.resume()
     }
     
     
     func GETtingStudentLocations(completionHandlerForGETStudentLocations: (result: [[String: AnyObject]]?, errorString: String?) -> Void) {
         
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://parse.udacity.com/parse/classes/StudentLocation?limit=100")!)
+        let parameters: [String: AnyObject] = [Constants.OTMParameterKeys.Limit: Constants.OTMParameterValues.Limit,
+                                               Constants.OTMParameterKeys.Order: Constants.OTMParameterValues.Order]
+        let request = NSMutableURLRequest(URL: otmURLFromParameters(parameters, withPathExtension: "/parse/classes/StudentLocation"))
+
         request.addValue(Constants.OTMParameterValues.AppKey, forHTTPHeaderField: Constants.OTMParameterKeys.AppKey)
         request.addValue(Constants.OTMParameterValues.RestApiKey, forHTTPHeaderField: Constants.OTMParameterKeys.RestApiKey)
+        
+        print (request)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil { // Handle error...
-                completionHandlerForGETStudentLocations(result: nil, errorString: "failed GETtingStudentLocations")
+                completionHandlerForGETStudentLocations(result: nil, errorString: "Failed in retrieving data, please check your network connection or the data exists")
+                print(error)
                 return
             }
             
@@ -61,9 +143,8 @@ class OTMClient : NSObject {
                 return
             }
             
-            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
+//            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
 
-            
             self.students = Student.studentsFromResults(results)
             
             completionHandlerForGETStudentLocations(result: results, errorString: nil)
@@ -75,7 +156,7 @@ class OTMClient : NSObject {
     
     func GETtingAStudentLocation(completionHandlerForGETtingAStudentLocation: (studentExist: Bool, errorString: String?) -> Void) {
         
-        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation?where=%7B%22uniqueKey%22%3A%22\(11111983)%22%7D"
+        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation?where=%7B%22\(Constants.OTMParameterKeys.UniqueKey)%22%3A%22\(Constants.OTMParameterValues.uniqueKey)%22%7D"
         let url = NSURL(string: urlString)
         let request = NSMutableURLRequest(URL: url!)
         request.addValue(Constants.OTMParameterValues.AppKey, forHTTPHeaderField: Constants.OTMParameterKeys.AppKey)
@@ -110,14 +191,15 @@ class OTMClient : NSObject {
             
             completionHandlerForGETtingAStudentLocation(studentExist: true, errorString: nil)
 
-            
             self.objectID = objectID
         }
         task.resume()
     }
     
-    func POSTingAStudentLocation(mapString: String, latitude: Double, longitude: Double, mediaURL: String, completionHandlerForPOSTingAStudentLocation: (result: [[String: AnyObject]]?, errorString: String?) -> Void) {
-        
+
+    
+    func POSTingAStudentLocation(mapString: String, latitude: Double, longitude: Double, mediaURL: String, completionHandlerForPOSTingAStudentLocation: (result: String?, errorString: String?) -> Void) {
+
         let request = NSMutableURLRequest(URL: NSURL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
         request.HTTPMethod = "POST"
         request.addValue(Constants.OTMParameterValues.AppKey, forHTTPHeaderField: Constants.OTMParameterKeys.AppKey)
@@ -129,6 +211,7 @@ class OTMClient : NSObject {
             if error != nil { // Handle error…
                 return
             }
+            
 //            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
             
             //Parse the data
@@ -145,6 +228,8 @@ class OTMClient : NSObject {
                 return
             }
             
+            completionHandlerForPOSTingAStudentLocation(result: "complete", errorString: nil)
+            
             self.objectID = objectID
             
             
@@ -154,8 +239,6 @@ class OTMClient : NSObject {
     }
     
     func PUTtingAStudentLocation(mapString: String, latitude: Double, longitude: Double, mediaURL: String, completionHandlerForPUTtingAStudentLocation: (result: Bool, errorString: String?) -> Void) {
-        
-        print(objectID)
         
         let urlString = "https://parse.udacity.com/parse/classes/StudentLocation/\(objectID!)"
         let url = NSURL(string: urlString)
@@ -198,11 +281,45 @@ class OTMClient : NSObject {
             
             completionHandlerForDELSession(result: true, errorString: nil)
 
-            self.appDelegate.sessionID = nil
+            self.sessionID = nil
 
         }
         task.resume()
     }
+    
+    func POSTingASessionWithFacebook(token: String, completionHandlerForOSTingASessionWithFacebook: (success: Bool, errorString: String?) -> Void) {
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
+        request.HTTPMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.HTTPBody = "{\"facebook_mobile\": {\"access_token\": \"\(token);\"}}".dataUsingEncoding(NSUTF8StringEncoding)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            if error != nil { // Handle error...
+                print(error)
+                return
+            }
+            let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
+            print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+            
+            //Parse the data
+            let parsedResult: AnyObject!
+            do {
+                parsedResult = try NSJSONSerialization.JSONObjectWithData(newData, options: .AllowFragments)
+            } catch {
+                print("Could not parse the data as JSON: '\(data)'")
+                return
+            }
+            
+            if let session = parsedResult[Constants.OTMResponseKeys.Session] as? [String: AnyObject], sessionID = session[Constants.OTMResponseKeys.SessionID] as? String {
+                self.sessionID = sessionID
+            }
+            
+            completionHandlerForOSTingASessionWithFacebook(success: true, errorString: nil)
+        }
+        task.resume()
+    }
+
     
     // MARK: Debug Area
     func DELETEingAUser(tempObjectID: String ,completionHandlerForDELSession: (result: Bool, errorString: String?) -> Void) {
@@ -222,6 +339,8 @@ class OTMClient : NSObject {
         }
         task.resume()
     }
+    
+
 
     
     // MARK: Shared Instance
@@ -231,5 +350,26 @@ class OTMClient : NSObject {
             static var sharedInstance = OTMClient()
         }
         return Singleton.sharedInstance
+    }
+    
+    // MARK: Helper methods
+    
+    // create a URL from parameters
+    func otmURLFromParameters(parameters: [String:AnyObject], withPathExtension: String? = nil) -> NSURL {
+        
+        let components = NSURLComponents()
+        components.scheme = Constants.OTM.ApiScheme
+        components.host = Constants.OTM.ApiHost
+        components.path = Constants.OTM.ApiPath + (withPathExtension ?? "")
+        components.queryItems = [NSURLQueryItem]()
+        
+        for (key, value) in parameters {
+            let queryItem = NSURLQueryItem(name: key, value: "\(value)")
+            components.queryItems!.append(queryItem)
+        }
+        
+        print(components.URL)
+        
+        return components.URL!
     }
 }
