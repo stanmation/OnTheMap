@@ -15,7 +15,7 @@ import FBSDKLoginKit
 class MapViewController: UIViewController, UIAlertViewDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var objectIDText: UITextField!
+//    @IBOutlet weak var objectIDText: UITextField!
     
     var students: [Student]?
 
@@ -30,13 +30,13 @@ class MapViewController: UIViewController, UIAlertViewDelegate {
         
         // configure map functionalities
         mapView.pitchEnabled = false
+        mapView.showsCompass = false
+        mapView.rotateEnabled = false
         
         // set navigationBar
         NavigationBar().setupButtons(self, nav: self.navigationItem)
-        
 
     }
-    
 
     
     override func viewWillAppear(animated: Bool) {
@@ -163,12 +163,12 @@ class MapViewController: UIViewController, UIAlertViewDelegate {
     
     // MARK: Debug area
     
-    @IBAction func deleteAUser(sender: AnyObject) {
-        
-        OTMClient.sharedInstance().DELETEingAUser(objectIDText.text!) { (result, errorString) in
-            print("user deleted")
-        }
-    }
+//    @IBAction func deleteAUser(sender: AnyObject) {
+//        
+//        OTMClient.sharedInstance().DELETEingAUser(objectIDText.text!) { (result, errorString) in
+//            print("user deleted")
+//        }
+//    }
     
     // MARK: other delegate methods
     

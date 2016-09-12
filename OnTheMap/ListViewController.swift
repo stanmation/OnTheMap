@@ -19,7 +19,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         // set navigationBar
         NavigationBar().setupButtons(self, nav: self.navigationItem)
     }

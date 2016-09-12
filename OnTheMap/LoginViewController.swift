@@ -14,11 +14,9 @@ class LoginViewController: UIViewController, UIAlertViewDelegate, FBSDKLoginButt
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
-    var appDelegate: AppDelegate!
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         //setup facebook button
         let loginButton = FBSDKLoginButton()
@@ -29,6 +27,7 @@ class LoginViewController: UIViewController, UIAlertViewDelegate, FBSDKLoginButt
         if (FBSDKAccessToken.currentAccessToken() != nil) {
             fetchFBProfile()
         }
+        
     }
     
     func fetchFBProfile() {
@@ -49,10 +48,10 @@ class LoginViewController: UIViewController, UIAlertViewDelegate, FBSDKLoginButt
     
     @IBAction func loginPressed(sender: UIButton) {
         if emailTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
-            print("Username or Password Empty")
+            displayAlert("Can't Login", messageText: "Username or passowrd is empty")
         } else {
             OTMClient.sharedInstance().authenticateWithViewController(self) {success, error in
-                if success == true {
+                if success {
                     performUIUpdatesOnMain {
                         self.completeLogin()
                     }
@@ -85,7 +84,7 @@ class LoginViewController: UIViewController, UIAlertViewDelegate, FBSDKLoginButt
     }
     
     
-    //MARK: Delegate methods
+    //MARK: Facebook Delegate methods
     
     func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
         if error != nil {

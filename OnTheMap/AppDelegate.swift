@@ -11,6 +11,8 @@ import FBSDKCoreKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    var sessionID: String?
 
     var window: UIWindow?
 

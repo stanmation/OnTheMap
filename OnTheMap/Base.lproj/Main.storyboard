@@ -312,44 +312,18 @@
                                     <outlet property="delegate" destination="ak0-L7-gub" id="dMh-mf-TdT"/>
                                 </connections>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zg6-Ai-sWj">
-                                <rect key="frame" x="255" y="484" width="91" height="30"/>
-                                <color key="backgroundColor" red="1" green="0.160998218" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="3NF-FO-Cu2"/>
-                                    <constraint firstAttribute="width" constant="91" id="nd3-mK-GyT"/>
-                                </constraints>
-                                <state key="normal" title="Delete a user"/>
-                                <connections>
-                                    <action selector="deleteAUser:" destination="ak0-L7-gub" eventType="touchUpInside" id="cEz-Gd-xKy"/>
-                                </connections>
-                            </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UPL-hN-bN9">
-                                <rect key="frame" x="252" y="436" width="97" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="97" id="6B0-ZN-rx0"/>
-                                    <constraint firstAttribute="height" constant="30" id="JyZ-07-KoW"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="7tw-eB-dbi" firstAttribute="top" secondItem="zg6-Ai-sWj" secondAttribute="bottom" constant="37" id="2Ax-SY-7UM"/>
-                            <constraint firstItem="zg6-Ai-sWj" firstAttribute="top" secondItem="UPL-hN-bN9" secondAttribute="bottom" constant="18" id="2zC-pf-qSf"/>
                             <constraint firstItem="7tw-eB-dbi" firstAttribute="top" secondItem="VUP-wz-Ocy" secondAttribute="bottom" id="KAd-Fa-srJ"/>
                             <constraint firstItem="VUP-wz-Ocy" firstAttribute="top" secondItem="5gr-G3-jim" secondAttribute="bottom" id="KE6-kw-bPp"/>
                             <constraint firstItem="VUP-wz-Ocy" firstAttribute="leading" secondItem="FoC-83-GUh" secondAttribute="leadingMargin" constant="-20" id="MKH-Fu-ibP"/>
-                            <constraint firstItem="zg6-Ai-sWj" firstAttribute="centerX" secondItem="FoC-83-GUh" secondAttribute="centerX" id="OcS-W7-k9c"/>
                             <constraint firstAttribute="trailingMargin" secondItem="VUP-wz-Ocy" secondAttribute="trailing" constant="-20" id="Rfz-lI-UQt"/>
-                            <constraint firstItem="UPL-hN-bN9" firstAttribute="centerX" secondItem="FoC-83-GUh" secondAttribute="centerX" id="hJC-eH-zma"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="On The Map" id="3SK-rH-YTy"/>
                     <connections>
                         <outlet property="mapView" destination="VUP-wz-Ocy" id="m75-22-Ah1"/>
-                        <outlet property="objectIDText" destination="UPL-hN-bN9" id="xCc-mA-603"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mCn-lr-oUk" userLabel="First Responder" sceneMemberID="firstResponder"/>

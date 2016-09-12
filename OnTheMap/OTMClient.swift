@@ -198,7 +198,8 @@ class OTMClient : NSObject {
     
 
     
-    func POSTingAStudentLocation(mapString: String, latitude: Double, longitude: Double, mediaURL: String, completionHandlerForPOSTingAStudentLocation: (result: String?, errorString: String?) -> Void) {
+    func POSTingAStudentLocation(mapString: String, latitude: Double, longitude: Double, mediaURL: String, completionHandlerForPOSTingAStudentLocation: (success:
+        Bool, errorString: String?) -> Void) {
 
         let request = NSMutableURLRequest(URL: NSURL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
         request.HTTPMethod = "POST"
@@ -209,6 +210,8 @@ class OTMClient : NSObject {
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil { // Handle error…
+                completionHandlerForPOSTingAStudentLocation(success: false, errorString: "Failed in storing student information into the server")
+                print(error)
                 return
             }
             
@@ -228,7 +231,7 @@ class OTMClient : NSObject {
                 return
             }
             
-            completionHandlerForPOSTingAStudentLocation(result: "complete", errorString: nil)
+            completionHandlerForPOSTingAStudentLocation(success: true, errorString: nil)
             
             self.objectID = objectID
             
@@ -238,7 +241,7 @@ class OTMClient : NSObject {
         
     }
     
-    func PUTtingAStudentLocation(mapString: String, latitude: Double, longitude: Double, mediaURL: String, completionHandlerForPUTtingAStudentLocation: (result: Bool, errorString: String?) -> Void) {
+    func PUTtingAStudentLocation(mapString: String, latitude: Double, longitude: Double, mediaURL: String, completionHandlerForPUTtingAStudentLocation: (success: Bool, errorString: String?) -> Void) {
         
         let urlString = "https://parse.udacity.com/parse/classes/StudentLocation/\(objectID!)"
         let url = NSURL(string: urlString)
@@ -251,10 +254,12 @@ class OTMClient : NSObject {
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil { // Handle error…
+                completionHandlerForPUTtingAStudentLocation(success: false, errorString: "Failed in storing student information into the server")
+                print(error)
                 return
             }
             
-            completionHandlerForPUTtingAStudentLocation(result: true, errorString: nil)
+            completionHandlerForPUTtingAStudentLocation(success: true, errorString: nil)
             print(NSString(data: data!, encoding: NSUTF8StringEncoding))
         }
         task.resume()
@@ -322,23 +327,23 @@ class OTMClient : NSObject {
 
     
     // MARK: Debug Area
-    func DELETEingAUser(tempObjectID: String ,completionHandlerForDELSession: (result: Bool, errorString: String?) -> Void) {
-        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation/\(tempObjectID)"
-        let url = NSURL(string: urlString)
-        let request = NSMutableURLRequest(URL: url!)
-        request.HTTPMethod = "DELETE"
-        request.addValue(Constants.OTMParameterValues.AppKey, forHTTPHeaderField: Constants.OTMParameterKeys.AppKey)
-        request.addValue(Constants.OTMParameterValues.RestApiKey, forHTTPHeaderField: Constants.OTMParameterKeys.RestApiKey)
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithRequest(request) { data, response, error in
-            if error != nil { // Handle error…
-                return
-            }
-            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
-        }
-        task.resume()
-    }
+//    func DELETEingAUser(tempObjectID: String ,completionHandlerForDELSession: (result: Bool, errorString: String?) -> Void) {
+//        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation/\(tempObjectID)"
+//        let url = NSURL(string: urlString)
+//        let request = NSMutableURLRequest(URL: url!)
+//        request.HTTPMethod = "DELETE"
+//        request.addValue(Constants.OTMParameterValues.AppKey, forHTTPHeaderField: Constants.OTMParameterKeys.AppKey)
+//        request.addValue(Constants.OTMParameterValues.RestApiKey, forHTTPHeaderField: Constants.OTMParameterKeys.RestApiKey)
+//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+//        let session = NSURLSession.sharedSession()
+//        let task = session.dataTaskWithRequest(request) { data, response, error in
+//            if error != nil { // Handle error…
+//                return
+//            }
+//            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
+//        }
+//        task.resume()
+//    }
     
 
 

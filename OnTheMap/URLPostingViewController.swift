@@ -79,9 +79,11 @@ class URLPostingViewController: UIViewController, UITextFieldDelegate, UIAlertVi
         
         if studentExist == true {
             // will update the location of your pin
-            OTMClient.sharedInstance().PUTtingAStudentLocation(locationInfoText!, latitude: (location?.coordinate.latitude)!, longitude: (location?.coordinate.longitude)!, mediaURL: linkText.text!) { (result, errorString) in
+            OTMClient.sharedInstance().PUTtingAStudentLocation(locationInfoText!, latitude: (location?.coordinate.latitude)!, longitude: (location?.coordinate.longitude)!, mediaURL: linkText.text!) { (success, errorString) in
                 if errorString != nil {
-                    print(errorString)
+                    performUIUpdatesOnMain{
+                        self.displayAlert("Error", messageText: errorString!)
+                    }
                     return
                 }
                 self.dismissViewControllerAnimated(true, completion: nil)
@@ -90,7 +92,9 @@ class URLPostingViewController: UIViewController, UITextFieldDelegate, UIAlertVi
             // will post your pin
             OTMClient.sharedInstance().POSTingAStudentLocation(locationInfoText!, latitude: (location?.coordinate.latitude)!, longitude: (location?.coordinate.longitude)!, mediaURL: linkText.text!) { (result, errorString) in
                 if errorString != nil {
-                    print(errorString)
+                    performUIUpdatesOnMain{
+                        self.displayAlert("Error", messageText: errorString!)
+                    }
                     return
                 }
                 self.dismissViewControllerAnimated(true, completion: nil)
