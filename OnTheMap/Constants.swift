@@ -35,8 +35,6 @@ struct Constants {
         static let RestApiKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
         static let Limit = 100
         static let Order = "-updatedAt"
-        static let uniqueKey = 11111983
-
     }
     
     // MARK: TMDB Response Keys

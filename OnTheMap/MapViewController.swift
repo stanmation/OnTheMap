@@ -17,7 +17,6 @@ class MapViewController: UIViewController, UIAlertViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
 //    @IBOutlet weak var objectIDText: UITextField!
     
-    var students: [Student]?
 
     var studentExist = false
     
@@ -35,17 +34,17 @@ class MapViewController: UIViewController, UIAlertViewDelegate {
         
         // set navigationBar
         NavigationBar().setupButtons(self, nav: self.navigationItem)
-
+        
     }
-
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
         refresh()
+
         
         OTMClient.sharedInstance().GETtingAStudentLocation { (studentExist, errorString) in
-            if studentExist == true {
+            if studentExist {
                 self.studentExist = true
             } else {
                 self.studentExist = false
@@ -79,17 +78,20 @@ class MapViewController: UIViewController, UIAlertViewDelegate {
     // This delegate method is implemented to respond to taps. It opens the system browser
     // to the URL specified in the annotationViews subtitle property.
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        
         if control == view.rightCalloutAccessoryView {
             let app = UIApplication.sharedApplication()
             if let toOpen = view.annotation?.subtitle! {
                 app.openURL(NSURL(string: toOpen)!)
+                return
             }
         }
+        displayAlert("Can't open url. Please check your url link", alertType: "NoConnection")
     }
 
     func logout () {
         OTMClient.sharedInstance().DELETEingSession() { (results, errorString) in
-            if results == true {
+            if results {
                 performUIUpdatesOnMain {
                     self.dismissViewControllerAnimated(true, completion: {
                         let loginManager = FBSDKLoginManager()
@@ -107,12 +109,11 @@ class MapViewController: UIViewController, UIAlertViewDelegate {
                     self.displayAlert(errorString!, alertType: "NoConnection")
                 }
             } else {
-                self.students = OTMClient.sharedInstance().students
 
                 // empty array of anontations
                 self.annotations.removeAll()
                 
-                for student in self.students! {
+                for student in Students.sharedInstance().allStudents {
                     
                     // The lat and long are used to create a CLLocationCoordinates2D instance.
                     let coordinate = CLLocationCoordinate2D(latitude: student.lat, longitude: student.long)
@@ -135,11 +136,8 @@ class MapViewController: UIViewController, UIAlertViewDelegate {
                     // When the array is complete, we add the annotations to the map.
                     self.mapView.addAnnotations(self.annotations)
                 }
-                
             }
-            
         }
-
     }
     
     func pinTapped(){
@@ -156,7 +154,8 @@ class MapViewController: UIViewController, UIAlertViewDelegate {
         let informationPostingViewController = self.storyboard!.instantiateViewControllerWithIdentifier("InformationPostingViewController") as! InformationPostingViewController
         informationPostingViewController.studentExist = studentExist
         self.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
-        informationPostingViewController.modalPresentationStyle = .OverCurrentContext
+        informationPostingViewController.modalPresentationStyle = .OverFullScreen
+
         presentViewController(informationPostingViewController, animated: true, completion: nil)
     }
     
@@ -178,8 +177,10 @@ class MapViewController: UIViewController, UIAlertViewDelegate {
         if alertType == "Overwrite" {
             alert.addAction(UIAlertAction(title: "Overwrite?", style: .Default, handler: { (handler) in
                 self.navigateToInformationPostingVC(true)
+
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+
         } else if alertType == "NoConnection" {
             alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         }

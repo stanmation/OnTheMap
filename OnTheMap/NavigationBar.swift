@@ -24,15 +24,12 @@ class NavigationBar: NSObject {
     }
     
     func logout() {
-        print("test")
     }
     
     func refresh() {
-        
     }
     
     func pinTapped() {
-        
     }
 
     

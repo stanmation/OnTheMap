@@ -11,33 +11,35 @@ import FBSDKLoginKit
 
 class OTMClient : NSObject {
     
-    var appDelegate: AppDelegate!
-    var students: [Student] = [Student]()
     var studentLocations: [[String: AnyObject]]?
-
     
     // shared session
     var session = NSURLSession.sharedSession()
     
     // authentication state
     var sessionID : String? = nil
-    var userID : Int? = nil
     var objectID: String?
 
+    // user data for POSTING
+    var userFirstname: String?
+    var userLastname: String?
+    var uniqueKey: String?
 
     
     // MARK: Initializers
     override init() {
         super.init()
-        
-        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
     }
     
     func authenticateWithViewController(hostViewController: LoginViewController, completionHandlerForAuth: (success: Bool, errorString: String?) -> Void) {
         self.POSTingASession(hostViewController.emailTextField.text!, password: hostViewController.passwordTextField.text!) {success, errorString in
             if success {
-                self.GETtingPublicUserData() {(success, errorString) in
+                self.GETtingPublicUserData(hostViewController.emailTextField.text!) {(success, errorString) in
+                    
+                    if success {
+                        
+                    }
+                    
                     completionHandlerForAuth(success: success, errorString: errorString)
                 }
 
@@ -58,7 +60,13 @@ class OTMClient : NSObject {
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
-                completionHandlerForPOSTingASession(success: false, errorString: "email or password is not correct")
+                print (error)
+                if error!.code == -1009 || error!.code == -1001 {
+                    completionHandlerForPOSTingASession(success: false, errorString: "Unable to connect: Please Try Again")
+
+                } else {
+                    completionHandlerForPOSTingASession(success: false, errorString: "email or password is not correct")
+                }
                 return
             }
             
@@ -71,6 +79,7 @@ class OTMClient : NSObject {
             
             let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
             print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+            
             
             //Parse the data
             let parsedResult: AnyObject!
@@ -85,16 +94,18 @@ class OTMClient : NSObject {
                 self.sessionID = sessionID
             }
             
-            if let account = parsedResult[Constants.OTMResponseKeys.Account] as? [String: AnyObject], accountKey = account[Constants.OTMResponseKeys.AccountKey] as? Int {
-                self.userID = accountKey
+            if let account = parsedResult[Constants.OTMResponseKeys.Account] as? [String: AnyObject], accountKey = account[Constants.OTMResponseKeys.AccountKey] as? String {
+                self.uniqueKey = accountKey
+
             }
+            
             completionHandlerForPOSTingASession(success: true, errorString: nil)
         }
         task.resume()
 
     }
     
-    func GETtingPublicUserData(completionHandlerForGettingPublicUserData: (success: Bool, errorString: String?) -> Void) {
+    func GETtingPublicUserData(userID: String, completionHandlerForGettingPublicUserData: (success: Bool, errorString: String?) -> Void) {
         let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/\(userID)")!)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
@@ -104,7 +115,39 @@ class OTMClient : NSObject {
                 return
             }
             let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
-            print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+//            print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+            
+            /* GUARD: Did we get a successful 2XX response? */
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+                print("Your request returned a status code other than 2xx!")
+                completionHandlerForGettingPublicUserData(success: false, errorString: "Failed in getting your data")
+                return
+            }
+            
+            //Parse the data
+            let parsedResult: AnyObject!
+            do {
+                parsedResult = try NSJSONSerialization.JSONObjectWithData(newData, options: .AllowFragments)
+            } catch {
+                print("Could not parse the data as JSON: '\(data)'")
+                return
+            }
+            
+            guard let user = parsedResult["user"] as? [String: AnyObject] else {
+                print ("can't find key 'results' in parsedResults")
+                return
+            }
+            
+            // getting first and last name
+            if let firstname = user["first_name"] as? String, lastname = user["last_name"] as? String {
+                self.userFirstname = firstname
+                self.userLastname = lastname
+            } else {
+                completionHandlerForGettingPublicUserData(success: false, errorString: "failed in getting Public User data")
+                return
+            }
+            
+            
             completionHandlerForGettingPublicUserData(success: true, errorString: nil)
         }
         task.resume()
@@ -120,12 +163,18 @@ class OTMClient : NSObject {
         request.addValue(Constants.OTMParameterValues.AppKey, forHTTPHeaderField: Constants.OTMParameterKeys.AppKey)
         request.addValue(Constants.OTMParameterValues.RestApiKey, forHTTPHeaderField: Constants.OTMParameterKeys.RestApiKey)
         
-        print (request)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil { // Handle error...
                 completionHandlerForGETStudentLocations(result: nil, errorString: "Failed in retrieving data, please check your network connection or the data exists")
                 print(error)
+                return
+            }
+            
+            /* GUARD: Did we get a successful 2XX response? */
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+                print("Your request returned a status code other than 2xx!")
+                completionHandlerForGETStudentLocations(result: nil, errorString: "Failed in retrieving data, please check your network connection or the data exists")
                 return
             }
             
@@ -145,7 +194,7 @@ class OTMClient : NSObject {
             
 //            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
 
-            self.students = Student.studentsFromResults(results)
+            Students.sharedInstance().allStudents = Student.studentsFromResults(results)
             
             completionHandlerForGETStudentLocations(result: results, errorString: nil)
             
@@ -156,7 +205,7 @@ class OTMClient : NSObject {
     
     func GETtingAStudentLocation(completionHandlerForGETtingAStudentLocation: (studentExist: Bool, errorString: String?) -> Void) {
         
-        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation?where=%7B%22\(Constants.OTMParameterKeys.UniqueKey)%22%3A%22\(Constants.OTMParameterValues.uniqueKey)%22%7D"
+        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation?where=%7B%22\(Constants.OTMParameterKeys.UniqueKey)%22%3A%22\(uniqueKey!)%22%7D"
         let url = NSURL(string: urlString)
         let request = NSMutableURLRequest(URL: url!)
         request.addValue(Constants.OTMParameterValues.AppKey, forHTTPHeaderField: Constants.OTMParameterKeys.AppKey)
@@ -167,6 +216,12 @@ class OTMClient : NSObject {
                 return
             }
 //            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
+            
+            /* GUARD: Did we get a successful 2XX response? */
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+                print("Your request returned a status code other than 2xx!")
+                return
+            }
             
             //Parse the data
             let parsedResult: AnyObject!
@@ -206,12 +261,18 @@ class OTMClient : NSObject {
         request.addValue(Constants.OTMParameterValues.AppKey, forHTTPHeaderField: Constants.OTMParameterKeys.AppKey)
         request.addValue(Constants.OTMParameterValues.RestApiKey, forHTTPHeaderField: Constants.OTMParameterKeys.RestApiKey)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.HTTPBody = "{\"uniqueKey\": \"11111983\", \"firstName\": \"Stanley\", \"lastName\": \"Darmawan\",\"mapString\": \"\(mapString)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(latitude), \"longitude\": \(longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
+        request.HTTPBody = "{\"uniqueKey\": \"\(uniqueKey!)\", \"firstName\": \"\(self.userFirstname!)\", \"lastName\": \"\(self.userLastname!)\",\"mapString\": \"\(mapString)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(latitude), \"longitude\": \(longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil { // Handle error…
                 completionHandlerForPOSTingAStudentLocation(success: false, errorString: "Failed in storing student information into the server")
                 print(error)
+                return
+            }
+            
+            /* GUARD: Did we get a successful 2XX response? */
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+                print("Your request returned a status code other than 2xx!")
                 return
             }
             
@@ -235,14 +296,13 @@ class OTMClient : NSObject {
             
             self.objectID = objectID
             
-            
         }
         task.resume()
         
     }
     
     func PUTtingAStudentLocation(mapString: String, latitude: Double, longitude: Double, mediaURL: String, completionHandlerForPUTtingAStudentLocation: (success: Bool, errorString: String?) -> Void) {
-        
+                
         let urlString = "https://parse.udacity.com/parse/classes/StudentLocation/\(objectID!)"
         let url = NSURL(string: urlString)
         let request = NSMutableURLRequest(URL: url!)
@@ -250,7 +310,7 @@ class OTMClient : NSObject {
         request.addValue(Constants.OTMParameterValues.AppKey, forHTTPHeaderField: Constants.OTMParameterKeys.AppKey)
         request.addValue(Constants.OTMParameterValues.RestApiKey, forHTTPHeaderField: Constants.OTMParameterKeys.RestApiKey)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.HTTPBody = "{\"uniqueKey\": \"11111983\", \"firstName\": \"Stanley\", \"lastName\": \"Darmawan\",\"mapString\": \"\(mapString)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(latitude), \"longitude\": \(longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
+        request.HTTPBody = "{\"uniqueKey\": \"\(uniqueKey!)\", \"firstName\": \"\(self.userFirstname!)\", \"lastName\": \"\(self.userLastname!)\",\"mapString\": \"\(mapString)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(latitude), \"longitude\": \(longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil { // Handle error…
@@ -305,7 +365,13 @@ class OTMClient : NSObject {
                 return
             }
             let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
-            print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+//            print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+            
+            /* GUARD: Did we get a successful 2XX response? */
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+                print("Your request returned a status code other than 2xx!")
+                return
+            }
             
             //Parse the data
             let parsedResult: AnyObject!
@@ -320,6 +386,10 @@ class OTMClient : NSObject {
                 self.sessionID = sessionID
             }
             
+            if let account = parsedResult[Constants.OTMResponseKeys.Account] as? [String: AnyObject], accountKey = account[Constants.OTMResponseKeys.AccountKey] as? String {
+                self.uniqueKey = accountKey
+            }
+            
             completionHandlerForOSTingASessionWithFacebook(success: true, errorString: nil)
         }
         task.resume()
@@ -327,7 +397,7 @@ class OTMClient : NSObject {
 
     
     // MARK: Debug Area
-//    func DELETEingAUser(tempObjectID: String ,completionHandlerForDELSession: (result: Bool, errorString: String?) -> Void) {
+//    func DELETEingAUser(tempObjectID: String! ,completionHandlerForDELSession: (result: Bool, errorString: String?) -> Void) {
 //        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation/\(tempObjectID)"
 //        let url = NSURL(string: urlString)
 //        let request = NSMutableURLRequest(URL: url!)
@@ -341,11 +411,12 @@ class OTMClient : NSObject {
 //                return
 //            }
 //            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
+//            
+//            completionHandlerForDELSession(result: true, errorString: nil)
 //        }
 //        task.resume()
 //    }
     
-
 
     
     // MARK: Shared Instance

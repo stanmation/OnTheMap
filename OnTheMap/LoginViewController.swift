@@ -48,16 +48,16 @@ class LoginViewController: UIViewController, UIAlertViewDelegate, FBSDKLoginButt
     
     @IBAction func loginPressed(sender: UIButton) {
         if emailTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
-            displayAlert("Can't Login", messageText: "Username or passowrd is empty")
+            displayAlert("Can't Login", messageText: "Username or password is empty")
         } else {
-            OTMClient.sharedInstance().authenticateWithViewController(self) {success, error in
+            OTMClient.sharedInstance().authenticateWithViewController(self) {success, errorString in
                 if success {
                     performUIUpdatesOnMain {
                         self.completeLogin()
                     }
                 } else {
                     performUIUpdatesOnMain {
-                        self.displayAlert("Error", messageText: "email or password is not correct")
+                        self.displayAlert("Error", messageText: errorString!)
                     }
                 }
             }

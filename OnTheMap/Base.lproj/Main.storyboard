@@ -123,7 +123,7 @@
                                         <rect key="frame" x="0.0" y="62" width="600" height="30"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                     </textField>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -180,12 +180,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W7U-RS-92M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3997" y="179"/>
+            <point key="canvasLocation" x="4809" y="179"/>
         </scene>
         <!--Information Posting View Controller-->
         <scene sceneID="Gs0-ax-M2K">
             <objects>
-                <viewController storyboardIdentifier="InformationPostingViewController" id="xPQ-6G-osy" customClass="InformationPostingViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="InformationPostingViewController" modalPresentationStyle="overFullScreen" hidesBottomBarWhenPushed="YES" id="xPQ-6G-osy" customClass="InformationPostingViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="qQ3-H9-3Ee"/>
                         <viewControllerLayoutGuide type="bottom" id="IAS-Kf-N5N"/>
@@ -285,6 +285,7 @@
                             </mask>
                         </variation>
                     </view>
+                    <navigationItem key="navigationItem" id="UE2-nx-bFc"/>
                     <connections>
                         <outlet property="inputTextField" destination="DDW-5s-0Zf" id="Fck-PL-7uu"/>
                         <segue destination="LaB-3L-Tkr" kind="show" identifier="URLPostingVC" animates="NO" id="Urr-kK-wkX"/>
@@ -292,7 +293,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rgu-2X-37f" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3309" y="179"/>
+            <point key="canvasLocation" x="4121" y="179"/>
         </scene>
         <!--On The Map-->
         <scene sceneID="fAC-pq-42U">
@@ -389,7 +390,7 @@
         <!--On The Map-->
         <scene sceneID="Wvi-3E-hkS">
             <objects>
-                <viewController id="ylf-t0-uP1" customClass="ListViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="ylf-t0-uP1" customClass="ListViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="FhI-lB-QyP"/>
                         <viewControllerLayoutGuide type="bottom" id="Qlr-Rb-R9m"/>
@@ -404,7 +405,7 @@
                                 <color key="separatorColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ListTableViewCell" id="aAf-Ja-Tse">
-                                        <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="aAf-Ja-Tse" id="z3L-h1-ny3">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>

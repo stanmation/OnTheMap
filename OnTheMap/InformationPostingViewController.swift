@@ -21,27 +21,28 @@ class InformationPostingViewController: UIViewController, UITextFieldDelegate {
         inputTextField.delegate = self
     }
 
+    
+
     @IBAction func findOnTheMap(sender: AnyObject) {
         
         if (inputTextField.text != "" ) || (inputTextField.text != "Enter Your Location Here") {
             self.performSegueWithIdentifier("URLPostingVC", sender: self)
-            dismissViewControllerAnimated(false, completion: nil)
         }
 
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         let controller = segue.destinationViewController as! URLPostingViewController
+        controller.previousViewController = self
         controller.locationInfoText = inputTextField.text
         controller.studentExist = studentExist
-
 
     }
     
     @IBAction func cancel(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
+
     }
-    
     
     // MARK: delegate methods
 

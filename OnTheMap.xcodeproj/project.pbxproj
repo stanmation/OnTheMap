@@ -19,6 +19,7 @@
 		1D7E7D5E1D70252900F5040F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1D7E7D5C1D70252900F5040F /* LaunchScreen.storyboard */; };
 		1D7E7D691D70252A00F5040F /* OnTheMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7E7D681D70252A00F5040F /* OnTheMapTests.swift */; };
 		1D7E7D741D70252A00F5040F /* OnTheMapUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7E7D731D70252A00F5040F /* OnTheMapUITests.swift */; };
+		1D9767921D8AC15100B4DC7A /* Students.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D9767911D8AC15100B4DC7A /* Students.swift */; };
 		1DA318931D798745009DAC29 /* Student.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DA318921D798745009DAC29 /* Student.swift */; };
 		1DBACE791D702C5F0051162B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBACE781D702C5F0051162B /* Constants.swift */; };
 		1DBACE7B1D7079E80051162B /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBACE7A1D7079E80051162B /* GCDBlackBox.swift */; };
@@ -65,6 +66,7 @@
 		1D7E7D6F1D70252A00F5040F /* OnTheMapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnTheMapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1D7E7D731D70252A00F5040F /* OnTheMapUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnTheMapUITests.swift; sourceTree = "<group>"; };
 		1D7E7D751D70252A00F5040F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1D9767911D8AC15100B4DC7A /* Students.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Students.swift; sourceTree = "<group>"; };
 		1DA318921D798745009DAC29 /* Student.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Student.swift; sourceTree = "<group>"; };
 		1DBACE781D702C5F0051162B /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		1DBACE7A1D7079E80051162B /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 				1DBACE7A1D7079E80051162B /* GCDBlackBox.swift */,
 				1D7DB1CB1D71067500D0FACB /* OTMClient.swift */,
 				1DA318921D798745009DAC29 /* Student.swift */,
+				1D9767911D8AC15100B4DC7A /* Students.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -326,6 +329,7 @@
 				1DBACE7B1D7079E80051162B /* GCDBlackBox.swift in Sources */,
 				1D7E7D561D70252900F5040F /* LoginViewController.swift in Sources */,
 				1D7DB1CA1D70FBB300D0FACB /* ListViewController.swift in Sources */,
+				1D9767921D8AC15100B4DC7A /* Students.swift in Sources */,
 				1D7E7D541D70252900F5040F /* AppDelegate.swift in Sources */,
 				1D7DB1CC1D71067500D0FACB /* OTMClient.swift in Sources */,
 				1D7DB1C81D70F4CC00D0FACB /* MapViewController.swift in Sources */,

@@ -17,11 +17,12 @@ class URLPostingViewController: UIViewController, UITextFieldDelegate, UIAlertVi
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var submitButton: UIButton!
     
-    
+    var previousViewController: UIViewController?
     var locationInfoText: String?
     let regionRadius: CLLocationDistance = 5000
     var location: CLLocation?
     var studentExist = false
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +36,7 @@ class URLPostingViewController: UIViewController, UITextFieldDelegate, UIAlertVi
         
         // disable submit button before the location is updated
         submitButton.enabled = false
+        
 
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(locationInfoText!) { (placemarks, error) in
@@ -86,7 +88,10 @@ class URLPostingViewController: UIViewController, UITextFieldDelegate, UIAlertVi
                     }
                     return
                 }
-                self.dismissViewControllerAnimated(true, completion: nil)
+                
+                performUIUpdatesOnMain{
+                    self.dismissASetVC()
+                }
             }
         } else {
             // will post your pin
@@ -97,14 +102,21 @@ class URLPostingViewController: UIViewController, UITextFieldDelegate, UIAlertVi
                     }
                     return
                 }
-                self.dismissViewControllerAnimated(true, completion: nil)
+                performUIUpdatesOnMain{
+                    self.dismissASetVC()
+                }
             }
         }
     }
     
-    
     @IBAction func cancel(sender: AnyObject) {
+        print(previousViewController)
+        dismissASetVC()
+    }
+    
+    func dismissASetVC () {
         dismissViewControllerAnimated(true, completion: nil)
+        self.previousViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
     
     // MARK: delegate methods

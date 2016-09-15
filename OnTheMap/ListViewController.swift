@@ -7,11 +7,12 @@
 //
 
 import UIKit
+import FBSDKLoginKit
+
 
 class ListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var appDelegate: AppDelegate!
-    var students: [Student]?
     var studentExist = false
 
     
@@ -28,7 +29,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewWillAppear(animated)
         
         refresh()
-
+        
         OTMClient.sharedInstance().GETtingAStudentLocation { (studentExist, errorString) in
             if studentExist == true {
                 self.studentExist = true
@@ -56,9 +57,9 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cellReuseIdentifier = "ListTableViewCell"
         let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier) as UITableViewCell!
         
-        if students?.count != nil {
+        if Students.sharedInstance().allStudents.count != 0 {
             // setup "locations" array
-            let student = students![indexPath.row]
+            let student = Students.sharedInstance().allStudents[indexPath.row]
             let first = student.firstName
             let last = student.lastName
             
@@ -73,15 +74,15 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if students?.count != nil {
-            return students!.count
+        if Students.sharedInstance().allStudents.count != 0 {
+            return Students.sharedInstance().allStudents.count
         } else {
             return 1
         }
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let student = students![indexPath.row]
+        let student = Students.sharedInstance().allStudents[indexPath.row]
         if verifyUrl(student.mediaUrl){
             UIApplication.sharedApplication().openURL(NSURL(string: student.mediaUrl)!)
         }
@@ -91,6 +92,19 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         return 40
     }
     
+    func logout () {
+        OTMClient.sharedInstance().DELETEingSession() { (results, errorString) in
+            if results {
+                performUIUpdatesOnMain {
+                    self.dismissViewControllerAnimated(true, completion: {
+                        let loginManager = FBSDKLoginManager()
+                        loginManager.logOut() // this is an instance function
+                    })
+                }
+            }
+        }
+    }
+    
     func refresh() {
         OTMClient.sharedInstance().GETtingStudentLocations() { (results, errorString) in
             if errorString != nil {
@@ -98,10 +112,8 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
                     self.displayAlert(errorString!, alertType: "NoConnection")
                 }
             } else  {
-                self.students = OTMClient.sharedInstance().students
                 
                 performUIUpdatesOnMain {
-                    self.students = OTMClient.sharedInstance().students
                     self.tableView.reloadData()
                 }
             }
@@ -122,7 +134,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         let informationPostingViewController = self.storyboard!.instantiateViewControllerWithIdentifier("InformationPostingViewController") as! InformationPostingViewController
         informationPostingViewController.studentExist = studentExist
         self.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
-        informationPostingViewController.modalPresentationStyle = .OverCurrentContext
+        informationPostingViewController.modalPresentationStyle = .OverFullScreen
         presentViewController(informationPostingViewController, animated: true, completion: nil)
     }
     

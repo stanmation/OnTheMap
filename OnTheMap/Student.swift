@@ -30,7 +30,7 @@ struct Student {
         lastName = last!
         
         var mediaURLRaw = dictionary[Constants.OTMResponseKeys.MediaURL] as? String
-        if mediaURLRaw == nil {mediaURLRaw = ""}
+        if mediaURLRaw == nil || mediaURLRaw == "Enter a Link to Share Here" {mediaURLRaw = ""}
         mediaUrl = mediaURLRaw!
         
         var latValue = dictionary[Constants.OTMResponseKeys.Latitude] as? Double
