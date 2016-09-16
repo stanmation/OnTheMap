@@ -22,7 +22,6 @@ class InformationPostingViewController: UIViewController, UITextFieldDelegate {
     }
 
     
-
     @IBAction func findOnTheMap(sender: AnyObject) {
         
         if (inputTextField.text != "" ) || (inputTextField.text != "Enter Your Location Here") {

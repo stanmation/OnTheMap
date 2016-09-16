@@ -82,11 +82,12 @@ class MapViewController: UIViewController, UIAlertViewDelegate {
         if control == view.rightCalloutAccessoryView {
             let app = UIApplication.sharedApplication()
             if let toOpen = view.annotation?.subtitle! {
-                app.openURL(NSURL(string: toOpen)!)
-                return
+                let openThisUrl = app.openURL(NSURL(string: toOpen)!)
+                if !openThisUrl {
+                    displayAlert("Can't open url. Please check your url link", alertType: "NoConnection")
+                }
             }
         }
-        displayAlert("Can't open url. Please check your url link", alertType: "NoConnection")
     }
 
     func logout () {

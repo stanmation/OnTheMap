@@ -352,7 +352,7 @@ class OTMClient : NSObject {
         task.resume()
     }
     
-    func POSTingASessionWithFacebook(token: String, completionHandlerForOSTingASessionWithFacebook: (success: Bool, errorString: String?) -> Void) {
+    func POSTingASessionWithFacebook(token: String, completionHandlerForPOSTingASessionWithFacebook: (success: Bool, errorString: String?) -> Void) {
         let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
@@ -372,7 +372,7 @@ class OTMClient : NSObject {
                 print("Your request returned a status code other than 2xx!")
                 return
             }
-            
+                        
             //Parse the data
             let parsedResult: AnyObject!
             do {
@@ -390,7 +390,7 @@ class OTMClient : NSObject {
                 self.uniqueKey = accountKey
             }
             
-            completionHandlerForOSTingASessionWithFacebook(success: true, errorString: nil)
+            completionHandlerForPOSTingASessionWithFacebook(success: true, errorString: nil)
         }
         task.resume()
     }
