@@ -71,7 +71,7 @@ class OTMClient : NSObject {
             }
             
             /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode  where statusCode >= 200 && statusCode <= 299 else {
                 print("Your request returned a status code other than 2xx!")
                 completionHandlerForPOSTingASession(success: false, errorString: "email or password is not correct")
                 return
@@ -90,11 +90,11 @@ class OTMClient : NSObject {
                 return
             }
             
-            if let session = parsedResult[Constants.OTMResponseKeys.Session] as? [String: AnyObject], sessionID = session[Constants.OTMResponseKeys.SessionID] as? String {
+            if let session = parsedResult[Constants.OTMResponseKeys.Session] as? [String: AnyObject], let sessionID = session[Constants.OTMResponseKeys.SessionID] as? String {
                 self.sessionID = sessionID
             }
             
-            if let account = parsedResult[Constants.OTMResponseKeys.Account] as? [String: AnyObject], accountKey = account[Constants.OTMResponseKeys.AccountKey] as? String {
+            if let account = parsedResult[Constants.OTMResponseKeys.Account] as? [String: AnyObject], let accountKey = account[Constants.OTMResponseKeys.AccountKey] as? String {
                 self.uniqueKey = accountKey
 
             }
@@ -118,7 +118,7 @@ class OTMClient : NSObject {
 //            print(NSString(data: newData, encoding: NSUTF8StringEncoding))
             
             /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode  where statusCode >= 200 && statusCode <= 299 else {
                 print("Your request returned a status code other than 2xx!")
                 completionHandlerForGettingPublicUserData(success: false, errorString: "Failed in getting your data")
                 return
@@ -139,7 +139,7 @@ class OTMClient : NSObject {
             }
             
             // getting first and last name
-            if let firstname = user["first_name"] as? String, lastname = user["last_name"] as? String {
+            if let firstname = user["first_name"] as? String, let lastname = user["last_name"] as? String {
                 self.userFirstname = firstname
                 self.userLastname = lastname
             } else {
@@ -172,7 +172,7 @@ class OTMClient : NSObject {
             }
             
             /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode  where statusCode >= 200 && statusCode <= 299 else {
                 print("Your request returned a status code other than 2xx!")
                 completionHandlerForGETStudentLocations(result: nil, errorString: "Failed in retrieving data, please check your network connection or the data exists")
                 return
@@ -196,6 +196,7 @@ class OTMClient : NSObject {
 
             Students.sharedInstance().allStudents = Student.studentsFromResults(results)
             
+            
             completionHandlerForGETStudentLocations(result: results, errorString: nil)
             
         }
@@ -218,7 +219,7 @@ class OTMClient : NSObject {
 //            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
             
             /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode  where statusCode >= 200 && statusCode <= 299 else {
                 print("Your request returned a status code other than 2xx!")
                 return
             }
@@ -271,7 +272,7 @@ class OTMClient : NSObject {
             }
             
             /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode  where statusCode >= 200 && statusCode <= 299 else {
                 print("Your request returned a status code other than 2xx!")
                 return
             }
@@ -368,7 +369,7 @@ class OTMClient : NSObject {
 //            print(NSString(data: newData, encoding: NSUTF8StringEncoding))
             
             /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode  where statusCode >= 200 && statusCode <= 299 else {
                 print("Your request returned a status code other than 2xx!")
                 return
             }
@@ -382,11 +383,11 @@ class OTMClient : NSObject {
                 return
             }
             
-            if let session = parsedResult[Constants.OTMResponseKeys.Session] as? [String: AnyObject], sessionID = session[Constants.OTMResponseKeys.SessionID] as? String {
+            if let session = parsedResult[Constants.OTMResponseKeys.Session] as? [String: AnyObject], let sessionID = session[Constants.OTMResponseKeys.SessionID] as? String {
                 self.sessionID = sessionID
             }
             
-            if let account = parsedResult[Constants.OTMResponseKeys.Account] as? [String: AnyObject], accountKey = account[Constants.OTMResponseKeys.AccountKey] as? String {
+            if let account = parsedResult[Constants.OTMResponseKeys.Account] as? [String: AnyObject], let accountKey = account[Constants.OTMResponseKeys.AccountKey] as? String {
                 self.uniqueKey = accountKey
             }
             

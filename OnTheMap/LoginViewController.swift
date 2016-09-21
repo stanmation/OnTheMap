@@ -25,9 +25,9 @@ class LoginViewController: UIViewController, UIAlertViewDelegate, FBSDKLoginButt
         self.view.addSubview(loginButton)
         
         if (FBSDKAccessToken.currentAccessToken() != nil) {
+            print("Access token is successful")
             fetchFBProfile()
         }
-        
     }
     
     func fetchFBProfile() {
@@ -88,7 +88,7 @@ class LoginViewController: UIViewController, UIAlertViewDelegate, FBSDKLoginButt
     
     func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
         if error != nil {
-            print("error")
+            print(error)
             return
         }
         

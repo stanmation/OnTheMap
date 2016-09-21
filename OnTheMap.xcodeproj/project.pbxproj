@@ -23,9 +23,9 @@
 		1DA318931D798745009DAC29 /* Student.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DA318921D798745009DAC29 /* Student.swift */; };
 		1DBACE791D702C5F0051162B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBACE781D702C5F0051162B /* Constants.swift */; };
 		1DBACE7B1D7079E80051162B /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBACE7A1D7079E80051162B /* GCDBlackBox.swift */; };
+		1DCFE04A1D9294E900181656 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DCFE0491D9294E900181656 /* FBSDKLoginKit.framework */; };
 		1DD9B7B81D7D5AE5000BA67A /* URLPostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD9B7B71D7D5AE5000BA67A /* URLPostingViewController.swift */; };
 		1DE482001D857EFC004E91C9 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DE481FD1D857EFC004E91C9 /* FBSDKCoreKit.framework */; };
-		1DE482011D857EFD004E91C9 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DE481FE1D857EFC004E91C9 /* FBSDKLoginKit.framework */; };
 		1DE482021D857EFD004E91C9 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DE481FF1D857EFC004E91C9 /* FBSDKShareKit.framework */; };
 		1DE482041D8585BB004E91C9 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DE482031D8585BB004E91C9 /* Bolts.framework */; };
 /* End PBXBuildFile section */
@@ -70,9 +70,10 @@
 		1DA318921D798745009DAC29 /* Student.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Student.swift; sourceTree = "<group>"; };
 		1DBACE781D702C5F0051162B /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		1DBACE7A1D7079E80051162B /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
+		1DCFE0491D9294E900181656 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		1DCFE04B1D92996F00181656 /* OnTheMap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OnTheMap.entitlements; sourceTree = "<group>"; };
 		1DD9B7B71D7D5AE5000BA67A /* URLPostingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLPostingViewController.swift; sourceTree = "<group>"; };
 		1DE481FD1D857EFC004E91C9 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
-		1DE481FE1D857EFC004E91C9 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		1DE481FF1D857EFC004E91C9 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
 		1DE482031D8585BB004E91C9 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -82,9 +83,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1DE482011D857EFD004E91C9 /* FBSDKLoginKit.framework in Frameworks */,
 				1DE482001D857EFC004E91C9 /* FBSDKCoreKit.framework in Frameworks */,
 				1DE482021D857EFD004E91C9 /* FBSDKShareKit.framework in Frameworks */,
+				1DCFE04A1D9294E900181656 /* FBSDKLoginKit.framework in Frameworks */,
 				1DE482041D8585BB004E91C9 /* Bolts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -142,6 +143,7 @@
 		1D7E7D521D70252900F5040F /* OnTheMap */ = {
 			isa = PBXGroup;
 			children = (
+				1DCFE04B1D92996F00181656 /* OnTheMap.entitlements */,
 				1DE481FC1D857ED7004E91C9 /* Frameworks */,
 				1D7DB1CD1D71085C00D0FACB /* Models */,
 				1DBACE771D702C4D0051162B /* View Controllers */,
@@ -187,9 +189,9 @@
 		1DE481FC1D857ED7004E91C9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1DCFE0491D9294E900181656 /* FBSDKLoginKit.framework */,
 				1DE482031D8585BB004E91C9 /* Bolts.framework */,
 				1DE481FD1D857EFC004E91C9 /* FBSDKCoreKit.framework */,
-				1DE481FE1D857EFC004E91C9 /* FBSDKLoginKit.framework */,
 				1DE481FF1D857EFC004E91C9 /* FBSDKShareKit.framework */,
 			);
 			name = Frameworks;
@@ -263,13 +265,22 @@
 				TargetAttributes = {
 					1D7E7D4F1D70252900F5040F = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = Q767PD4MNB;
+						LastSwiftMigration = 0800;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 					1D7E7D631D70252A00F5040F = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0800;
 						TestTargetID = 1D7E7D4F1D70252900F5040F;
 					};
 					1D7E7D6E1D70252A00F5040F = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0800;
 						TestTargetID = 1D7E7D4F1D70252900F5040F;
 					};
 				};
@@ -481,6 +492,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = OnTheMap/OnTheMap.entitlements;
+				DEVELOPMENT_TEAM = Q767PD4MNB;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/OnTheMap",
@@ -490,6 +503,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stanmation.OnTheMap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -497,6 +511,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = OnTheMap/OnTheMap.entitlements;
+				DEVELOPMENT_TEAM = Q767PD4MNB;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/OnTheMap",
@@ -506,6 +522,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stanmation.OnTheMap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
@@ -517,6 +534,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stanmation.OnTheMapTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnTheMap.app/OnTheMap";
 			};
 			name = Debug;
@@ -529,6 +547,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stanmation.OnTheMapTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnTheMap.app/OnTheMap";
 			};
 			name = Release;
@@ -540,6 +559,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stanmation.OnTheMapUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TEST_TARGET_NAME = OnTheMap;
 			};
 			name = Debug;
@@ -551,6 +571,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stanmation.OnTheMapUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TEST_TARGET_NAME = OnTheMap;
 			};
 			name = Release;
