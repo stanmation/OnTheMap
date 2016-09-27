@@ -31,13 +31,21 @@ class LoginViewController: UIViewController, UIAlertViewDelegate, FBSDKLoginButt
     }
     
     func fetchFBProfile() {
+        // for facebook authentication
         let token = FBSDKAccessToken.currentAccessToken().tokenString
         OTMClient.sharedInstance().POSTingASessionWithFacebook(token) { (success, errorString) in
             
             if (success) {
-                performUIUpdatesOnMain {
-                    self.completeLogin()
-                } 
+                
+                OTMClient.sharedInstance().GETtingPublicUserData() {(success, errorString) in
+                    
+                    if success {
+                        performUIUpdatesOnMain {
+                            self.completeLogin()
+                        }
+                    }
+                }
+
             } else {
                 performUIUpdatesOnMain {
                     self.displayAlert("Error", messageText: "Your facebook ID is not connected to your Udacity account")

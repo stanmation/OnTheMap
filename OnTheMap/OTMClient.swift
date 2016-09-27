@@ -34,7 +34,7 @@ class OTMClient : NSObject {
     func authenticateWithViewController(hostViewController: LoginViewController, completionHandlerForAuth: (success: Bool, errorString: String?) -> Void) {
         self.POSTingASession(hostViewController.emailTextField.text!, password: hostViewController.passwordTextField.text!) {success, errorString in
             if success {
-                self.GETtingPublicUserData(hostViewController.emailTextField.text!) {(success, errorString) in
+                self.GETtingPublicUserData() {(success, errorString) in
                     
                     if success {
                         
@@ -105,8 +105,8 @@ class OTMClient : NSObject {
 
     }
     
-    func GETtingPublicUserData(userID: String, completionHandlerForGettingPublicUserData: (success: Bool, errorString: String?) -> Void) {
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/\(userID)")!)
+    func GETtingPublicUserData(completionHandlerForGettingPublicUserData: (success: Bool, errorString: String?) -> Void) {
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/\(self.uniqueKey!)")!)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil { // Handle error...
